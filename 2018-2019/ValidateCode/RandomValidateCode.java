@@ -14,11 +14,11 @@ import javax.servlet.http.HttpSession;
 public class RandomValidateCode {
 	public static final String RANDOMCODEKEY= "RANDOMVALIDATECODEKEY";//放到session中的key     
     //private String randString = "0123456789";//随机产生只有数字的字符串 private String
-    private String randString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";//随机产生只有字母的字符串
-    //private String randString = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//随机产生数字与字母组合的字符串  
+    //private String randString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";//随机产生只有字母的字符串
+    private String randString = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";//随机产生数字与字母组合的字符串  
     private int width = 95;// 图片宽  
     private int height = 25;// 图片高  
-//    private int lineSize = 40;// 干扰线数量  
+    private int lineSize = 40;// 干扰线数量  
     private int stringNum = 4;// 随机产生字符数量  
     
     private Random random = new Random(); 
@@ -60,10 +60,10 @@ public class RandomValidateCode {
         g.setFont(new Font("Times New Roman", Font.PLAIN, 20)); 
        
         g.setColor(getRandColor(110, 133)); 
-//        // 绘制干扰线  
-//        for (int i = 0; i <= lineSize; i++) { 
-//            drowLine(g); 
-//        } 
+        // 绘制干扰线  
+        for (int i = 0; i <= lineSize; i++) { 
+            drowLine(g); 
+        } 
         // 绘制随机字符  
         String randomString = ""; 
         for (int i = 1; i <= stringNum; i++) { 
@@ -89,8 +89,8 @@ public class RandomValidateCode {
     private String drowString(Graphics g, String randomString, int i) { 
         g.setFont(getFont()); 
         //g.setColor(new Color(random.nextInt(101), random.nextInt(111), random .nextInt(121))); 89,160,213
-        g.setColor(new Color(89,160,213));
-        String rand = String.valueOf(getRandomString(random.nextInt(randString 
+        g.setColor(new Color(random.nextInt(101),random.nextInt(111),random.nextInt(121)));
+	String rand = String.valueOf(getRandomString(random.nextInt(randString 
                 .length()))); 
         randomString += rand; 
         g.translate(random.nextInt(3), random.nextInt(3)); 
