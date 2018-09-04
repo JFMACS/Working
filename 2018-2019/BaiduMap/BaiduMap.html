@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="百度地图,百度地图API，百度地图自定义工具，百度地图所见即所得工具" />
+    <meta name="description" content="百度地图API自定义地图，帮助用户在可视化操作下生成百度地图" />
+    <title>百度地图API自定义地图</title>
+    <!--引用百度地图API-->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=01ba23b226c44e122aae8c9ce49ad3d1"></script>
+    <script src="jquery.min.js"></script>
+  </head>
+  
+  <body>
+    <!--百度地图容器-->
+    <div class="sblefts" id="地图插件">
+        <div id="allmap" style="width:800px;height:600px;overflow: auto; zoom: 1; position: relative;">
+            <div id="map" style="height: 100%; -webkit-transition: all 0.5s ease-in-out; transition: all 0.5s ease-in-out;"></div>
+        </div>
+        <input id="latitude" type="text" placeholder="维度"></input>
+        <input id="longitude" type="text" placeholder="经度"></input>
+        <input type="button" onclick="addPoint()" value="add"></input>
+        <input type="button" onclick="clearAllPoint()" value="clear"></input>
+    </div>
+  </body>
+<script type="text/javascript">
+
+// 地图初始化
+var map = new BMap.Map('allmap');
+var poi = new BMap.Point(116.331398,39.897445);
+map.centerAndZoom(poi, 11);
+map.enableScrollWheelZoom(true);
+var maps = {};
+
+function addPoint(){
+    var longitude = $("#longitude").val();
+    var latitude = $("#latitude").val();
+    var poi = new BMap.Point(longitude,latitude);
+    var marker = new BMap.Marker(poi);
+    map.addOverlay(marker);
+    maps[longitude+""+latitude]=marker;
+    map.centerAndZoom(poi, 10);
+}
+
+function clearPoint(longitude,latitude){
+    var value= maps[longitude+""+latitude]; 
+    map.removeOverlay(value);
+}
+
+function clearAllPoint(){
+    map.clearOverlays(); 
+}
+
+var step = 0.04; //密度
+var bounds;
+var polygon;
+var gIndex = 0;
+function showPoint(polygon2,bounds2,startX,startY,endX,endY){
+
+    bounds = bounds2;
+    polygon = polygon2;
+    
+    if(startX == endX || startY == endY){
+        //线    
+        if(startX == endX){
+            for(startY=bounds.getSouthWest().lng;startY <= endY; startY += step)
+            {
+                pointList.push(new BMap.Point(startY,startX));
+            }
+        }else{
+            for(startX=bounds.getSouthWest().lat;startX <= endX;startX += step)
+            {
+                pointList.push(new BMap.Point(startY,startX));
+            }
+        }
+        
+    }else{
+        //面
+        var boundsList = cuttingBounds(bounds);
+        if(boundsList.length > 1)
+        {
+            for( i in boundsList)
+            {
+                var b = boundsList[i];
+                if(bounds.containsBounds(b))
+                {
+                    //完全包含
+                    pointList = pointList.concat(getPointByBounds(b));
+                    //alert(pointList.length);
+                }else{
+                    //不完全包含,进行过滤
+                    pointList = pointList.concat(containsPonint(getPointByBounds(b)));
+                }
+                 
+            }
+        }else{
+            pointList = pointList.concat(containsPonint(getPointByBounds(boundsList[0])));
+        }
+    }
+    gIndex = 0;
+    geocoder();
+}
+    
+//切割区域,返回切割后的区域列表
+function cuttingBounds(bounds)
+{
+    var lengX = step * 10;    //切割长度X
+    var lengY = step * 10;    //切割长度Y
+    var boundsList = new Array();
+    var southWest = bounds.getSouthWest();    //矩形区域的西南角
+    var northEast = bounds.getNorthEast();    //矩形区域的东北角
+    var startX = southWest.lat;        //X轴开始循环值
+    var startY = southWest.lng;        //Y轴开始循环值
+    var endX = northEast.lat;        //X轴结束循环值
+    var endY = northEast.lng;        //Y轴结束循环值
+    while(startX < endX)
+    {
+        var tempX = startX + lengX;
+        if(tempX >= endX)
+        {
+            //超出范围
+            tempX = endX;
+        }
+        startY = southWest.lng;
+        isY = true;
+        while(startY < endY)
+        {
+            var tempY = startY + lengY;
+            if(tempY >= endY)
+            {
+                //超出范围
+                tempY = endY;
+            }
+            boundsList.push(new BMap.Bounds(new BMap.Point(startY,startX),new BMap.Point(tempY,tempX)));
+            startY = tempY + step;
+        }
+        startX = tempX + step;
+    }
+    return boundsList;
+}
+
+//获取矩形区域内的所有点
+function getPointByBounds(bounds)
+{
+    //alert("获取点数据");
+    var southWest = bounds.getSouthWest();    //矩形区域的西南角
+    var northEast = bounds.getNorthEast();    //矩形区域的东北角
+    var startX;        //X轴开始循环值
+    var startY;        //Y轴开始循环值
+    var endX = northEast.lat;        //X轴结束循环值
+    var endY = northEast.lng;        //Y轴结束循环值
+    var pl = new Array();
+    for(startX = southWest.lat;startX <= endX;startX += step)
+    {
+        for(startY = southWest.lng;startY <= endY; startY += step)
+        {
+            pl.push(new BMap.Point(startY,startX));
+        }
+    }
+    return pl;
+}
+
+//过滤此区域内的点
+function containsPonint(list)
+{
+    //alert("点有效性检查.");
+    var l = new Array();
+    for(i in list)
+    {
+        var p = list[i];
+        
+        if(BMapLib.GeoUtils.isPointInPolygon(p, polygon) ){
+            l.push(p);
+        }
+    }
+    return l;
+}
+
+//如果点未处理过且在矩形区域内
+function isPoint(point)
+{
+    if(bounds.containsPoint(point) == false)
+    {
+        //不在区域内
+        return false;
+    }
+    for(i in pointList)
+    {
+        if(pointList[i].equals(point))
+        {
+            //列表中已存在
+            return false;
+        }
+    }
+    return true;
+} 
+
+//逆地址解析
+function geocoder() {
+    if (pointList != null && pointList.length > 0) {
+        var point = pointList[gIndex];
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        overlays.push(marker);
+
+        geocodeSearch(point);
+        gIndex++;
+    }
+}
+
+function geocodeSearch(point) {
+    if (gIndex < pointList.length - 1) {
+        setTimeout(window.geocoder, 400);
+    }
+    geoc.getLocation(point, function(rs) {
+        var info = point.lng + ";" + point.lat;
+        var addComp = rs.addressComponents;
+        info = info + ";" + addComp.province + addComp.city
+                + addComp.district + addComp.street
+                + addComp.streetNumber;
+        overlays2.push(info);
+    });
+}
+</script>
+</html>
