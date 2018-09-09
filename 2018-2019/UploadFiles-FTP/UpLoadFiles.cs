@@ -19,7 +19,7 @@ namespace WindowsFormsApplication2.UpLoad
         private const string ip = "172.16.102.181";
         private const int port = 21;
         private const string username = "ftpname";
-        private const string psd = "123456";
+        private const string psd = "";
         private const string root_remote_dir = "/home/ftp/cxy/GIS_TEST";//所有上传的内容都相对于该目录
 
         private string root_remote_dir_url;//ftp上传的根位置的url地址,所有上传的内容都相对于该url地址
