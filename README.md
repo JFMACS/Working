@@ -8,4 +8,4 @@
 |02|2018.08.10|[FTP文件上传](/2018-2019/UploadFiles-FTP)|FTP文件、文件夹批量上传，支持断点续传|C#|
 |03|2018.08.20|[登录图片验证](/2018-2019/ValidateCode)|JavaWeb用户登录图片验证|Java|
 |04|2018.09.04|[百度地图API](/2018-2019/BaiduMap)|百度地图标记的使用|js|
-|05|2018.09.19|[Java生成excel](/2018-2019/WorkBook)|使用Java生成excel文件|Java|
+|05|2018.09.19|[Java Excel工具](/2018-2019/ExcelUtil)|使用Java编辑、转换Excel文件|Java|
