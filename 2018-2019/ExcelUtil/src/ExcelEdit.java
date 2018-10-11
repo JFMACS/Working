@@ -17,12 +17,14 @@ class ExcelEdit {
                 Iterator rows = sheet.rowIterator();
                 while(rows.hasNext()){
                     Row row = (Row)rows.next();
-                    if(row!=null) {
+                    if(row != null) {
                         int num = row.getLastCellNum();
                         for(int j = 0; j < num; j++) {
                             Cell cell =  row.getCell(j);
-                            if(cell!=null) {
-                                cell.setCellType(CellType.STRING);
+                            if(cell != null) {
+                                if(cell.getCellTypeEnum() != CellType.STRING){
+	                        		continue;
+	                        	}
                             }
                             if(cell == null || cell.getStringCellValue() == null) {
                                 continue;
