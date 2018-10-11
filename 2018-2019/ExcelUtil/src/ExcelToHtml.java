@@ -212,7 +212,7 @@ class ExcelToHtml{
      * @param sheet 表格
      * @param sb 字符流
      */
-    private static boolean dealExcelStyle(Workbook wb,Sheet sheet,Cell cell,StringBuffer sb){
+    private static boolean dealExcelStyle(Workbook wb, Sheet sheet, Cell cell, StringBuffer sb){
         boolean underLine = false;
         CellStyle cellStyle = cell.getCellStyle();
         if (cellStyle != null) {
