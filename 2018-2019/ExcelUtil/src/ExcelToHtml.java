@@ -353,7 +353,7 @@ class ExcelToHtml{
                 vAlign = "bottom";
                 break;
             case CENTER:
-                vAlign = "center";
+                vAlign = "middle";
                 break;
             case TOP:
                 vAlign = "top";
