@@ -15,10 +15,10 @@ if("replace".equals(value)){
 }
 ```
   
-### 将excel转换为html
-#### 支持将（filePath）表格转换成（htmlPath）网页，可保留表格名称、表格排版、表格样式、文字样式、居中、部分边框
+### 在线编辑excel中的值
+#### 将（filePath）表格转换成（htmlPath）网页，将单元格转换成可编辑的textarea，前台编辑结束再将修改后的值以map的形式传到后台进行修改
 ```java
 // 调用
 ExcelToHtml.readExcelToHtml(filePath, htmlPath)
+ExcelEdit.editValues(String sourceFilePath, Map map)
 ```
-注：若将转换结果以字符串形式传到页面，需注意“:” “"” “\n”等的转换
