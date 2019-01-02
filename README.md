@@ -13,3 +13,4 @@
 |05|2018.09.19|[Excel工具](/2018-2019/ExcelUtil)|使用Java编辑、转换Excel文件|Java|
 |06|2018.11.22|[UUID、密码加密](/2018-2019/Md5AndBase64.java)|使用MD5+BASE64对密码进行加密，UUID的生成|Java|
 |07|2018.12.13|[发送电子邮件](/2018-2019/SendEmail.java)|使用java+QQ邮箱发送带附件的邮件|Java|
+|08|2019.01.02|[生成二维码](/2018-2019/QrCodeCreateUtil.java)|使用Google.zxing生成二维码|Java|
