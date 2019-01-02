@@ -84,12 +84,12 @@ public class QrCodeCreateUtil {
         }
         System.out.println(result.getText());
     }
+    
     /**
      * 测试代码
      * @throws WriterException
      */
     public static void main(String[] args) throws IOException, WriterException {
-
         createQrCode(new FileOutputStream(new File("d:\\qrcode.jpg")),"https://www.baidu.com",900,"JPEG");
         readQrCode(new FileInputStream(new File("d:\\qrcode.jpg")));
     }
